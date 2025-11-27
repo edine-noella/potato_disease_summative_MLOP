@@ -14,14 +14,26 @@ import threading
 import time
 import psutil
 
-from prediction import DiseasePredictor, explain_prediction
-from train import TrainingPipeline, retrain_model
-from preprocessing import analyze_dataset
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+try:
+    from prediction import DiseasePredictor, explain_prediction
+    from train import TrainingPipeline, retrain_model
+    from preprocessing import analyze_dataset
+except ImportError:
+    # Try relative imports
+    from .prediction import DiseasePredictor, explain_prediction
+    from .train import TrainingPipeline, retrain_model
+    from .preprocessing import analyze_dataset
 
 # Initialize Flask app
 app = Flask(__name__, 
-           template_folder='../templates',
-           static_folder='../static')
+           template_folder='templates',
+           static_folder='static')
 CORS(app)
 
 # Configuration
@@ -52,10 +64,17 @@ prediction_count = 0
 
 # Initialize predictor
 try:
+    # Check if model exists, create placeholder if not
+    if not os.path.exists('models/potato_disease_model.h5'):
+        logger.warning("Model not found. Creating placeholder model...")
+        import download_model
+        download_model.create_simple_model()
+    
     predictor = DiseasePredictor()
     logger.info("Predictor initialized successfully")
 except Exception as e:
     logger.error(f"Failed to initialize predictor: {e}")
+    predictor = None
 
 
 def allowed_file(filename):
@@ -453,4 +472,7 @@ if __name__ == '__main__':
     os.makedirs('logs', exist_ok=True)
     os.makedirs('models', exist_ok=True)
     
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Get port from environment variable (for cloud deployment)
+    port = int(os.environ.get('PORT', 5000))
+    
+    app.run(host='0.0.0.0', port=port, debug=False)
