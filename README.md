@@ -25,7 +25,7 @@ This project satisfies **all requirements** in the ALU Machine Learning Pipeline
 ---
 
 ## Live Demo (Hosted Application)
-**Live App URL:** [*Add your Render URL here*](https://potato-disease-summative-mlop.onrender.com/)  
+**Live App URL:** [*https://potato-disease-summative-mlop.onrender.com/*](https://potato-disease-summative-mlop.onrender.com/)  
 
 ---
 
