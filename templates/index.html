@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato Disease Classifier</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>🥔 Potato Disease Classifier</h1>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/visualizations">Visualizations</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <section class="hero">
+            <h2>AI-Powered Potato Disease Detection</h2>
+            <p>Upload an image of a potato leaf to detect diseases instantly</p>
+        </section>
+
+        <section class="upload-section">
+            <div class="upload-box">
+                <h3>Single Image Prediction</h3>
+                <input type="file" id="imageInput" accept="image/*" />
+                <button onclick="predictSingle()" class="btn-primary">Predict Disease</button>
+                
+                <div id="imagePreview" class="image-preview"></div>
+                <div id="result" class="result-box"></div>
+            </div>
+        </section>
+
+        <section class="batch-section">
+            <div class="upload-box">
+                <h3>Batch Prediction</h3>
+                <input type="file" id="batchInput" accept="image/*" multiple />
+                <button onclick="predictBatch()" class="btn-secondary">Predict Multiple</button>
+                
+                <div id="batchResults" class="batch-results"></div>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h3>Supported Diseases</h3>
+            <div class="disease-grid">
+                <div class="disease-card">
+                    <h4>🍂 Early Blight</h4>
+                    <p>Caused by Alternaria solani fungus. Creates dark spots with concentric rings on leaves.</p>
+                </div>
+                <div class="disease-card">
+                    <h4>🦠 Late Blight</h4>
+                    <p>Caused by Phytophthora infestans. Rapidly destroys crops with water-soaked lesions.</p>
+                </div>
+                <div class="disease-card">
+                    <h4>✅ Healthy</h4>
+                    <p>No visible disease symptoms. Continue monitoring and maintain good practices.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Potato Disease Classifier | African Leadership University</p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

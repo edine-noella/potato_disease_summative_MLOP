@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    
+  # For load testing
+  # locust:
+  #   image: locustio/locust
+  #   ports:
+  #     - "8089:8089"
+  #   volumes:
+  #     - ./tests:/mnt/locust
+  #   command: -f /mnt/locust/locustfile.py --host=http://app:5000
+  #   depends_on:
+  #     - app
