@@ -29,17 +29,17 @@ This project satisfies **all requirements** in the ALU Machine Learning Pipeline
 
 ---
 
-## 🎥 Video Demonstration  
+## Video Demonstration  
 **YouTube Demo:** *Add your YouTube link here*  
 
 The video demonstrates:  
-✔ UI walkthrough  
-✔ Predictions (single & batch)  
-✔ Retraining trigger  
-✔ Visualization page  
-✔ Dashboard (uptime, system stats, prediction stats)  
-✔ API demonstration  
-✔ Flood test results  
+- UI walkthrough  
+- Predictions (single & batch)  
+- Retraining trigger  
+- Visualization page  
+- Dashboard (uptime, system stats, prediction stats)  
+- API demonstration  
+- Flood test results  
 
 ---
 
@@ -88,7 +88,6 @@ potato_disease_summative_MLOP/
 │ └── locustfile.py
 │
 └── requirements.txt
-
 
 ---
 
