@@ -64,7 +64,7 @@ body {
 .hero {
     text-align: center;
     padding: 3rem 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2a92e2 0%, #919190 100%);
     color: white;
     border-radius: 10px;
     margin-bottom: 2rem;
@@ -246,7 +246,7 @@ body {
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2a92e2 0%, #919190 100%);
     color: white;
     padding: 1.5rem;
     border-radius: 10px;

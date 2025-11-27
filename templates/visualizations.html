@@ -1,131 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Visualizations - Potato Disease Classifier</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <nav class="navbar">
-        <div class="container">
-            <h1>🥔 Potato Disease Classifier</h1>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/visualizations" class="active">Visualizations</a></li>
-            </ul>
-        </div>
+      <div class="container">
+        <h1>Potato Disease Classifier</h1>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/visualizations" class="active">Visualizations</a></li>
+        </ul>
+      </div>
     </nav>
 
     <div class="container main-content">
-        <h2>Data Visualizations</h2>
+      <h2>Data Visualizations</h2>
 
-        <!-- Class Distribution -->
-        <section class="viz-section">
-            <h3>📊 Class Distribution</h3>
-            <p class="viz-description">
-                The training dataset shows distribution across three classes. Early and Late Blight have 1000 images each,
-                while Healthy class has only 152 images. This imbalance is typical in disease datasets as diseased samples
-                are more common in research datasets. The model uses data augmentation to address this imbalance.
+      <!-- Class Distribution -->
+      <section class="viz-section">
+        <h3>Class Distribution</h3>
+        <p class="viz-description">
+          The training dataset shows distribution across three classes. Early
+          and Late Blight have more images than the Healthy class. This
+          imbalance is common in disease datasets. The model uses data
+          augmentation to help handle this.
+        </p>
+        <div class="chart-container">
+          <canvas id="classDistributionChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Disease Severity Comparison -->
+      <section class="viz-section">
+        <h3>Disease Impact Analysis</h3>
+        <p class="viz-description">
+          Early Blight and Late Blight are the two most significant potato
+          diseases. Late Blight is historically more devastating – it caused the
+          Irish Potato Famine. Early detection through this AI system can help
+          farmers take preventive action and save a large portion of their crop.
+        </p>
+        <div class="chart-container">
+          <canvas id="diseaseImpactChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Model Performance -->
+      <section class="viz-section">
+        <h3>Model Performance (Example Curves)</h3>
+        <p class="viz-description">
+          The learning curves below illustrate how training and validation
+          accuracy evolve over epochs. In practice, you would plug in the
+          history from your notebook. Here we simulate realistic curves to show
+          how the model converges.
+        </p>
+        <div class="chart-container">
+          <canvas id="performanceChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Dataset Statistics -->
+      <section class="viz-section">
+        <h3>Dataset Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Training Images</h4>
+            <p id="totalImages" class="stat-value">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Early Blight Samples</h4>
+            <p class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Late Blight Samples</h4>
+            <p class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Healthy Samples</h4>
+            <p class="stat-value">–</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Insights -->
+      <section class="viz-section">
+        <h3>Key Insights</h3>
+        <div class="insights">
+          <div class="insight-card">
+            <h4>1. Data Imbalance Challenge</h4>
+            <p>
+              The healthy class usually has fewer samples than the diseased
+              classes. This reflects real-world conditions. We use data
+              augmentation (rotations, flips, zoom) and careful validation to
+              reduce bias toward the majority classes.
             </p>
-            <div class="chart-container">
-                <canvas id="classDistributionChart"></canvas>
-            </div>
-        </section>
-
-        <!-- Disease Severity Comparison -->
-        <section class="viz-section">
-            <h3>🔬 Disease Impact Analysis</h3>
-            <p class="viz-description">
-                Early Blight and Late Blight are the two most significant potato diseases in Africa.
-                Late Blight is historically more devastating - it caused the Irish Potato Famine.
-                Early detection through AI can help farmers take preventive action and save up to 50% of their crops.
+          </div>
+          <div class="insight-card">
+            <h4>2. Disease Characteristics</h4>
+            <p>
+              Early Blight creates dark spots with concentric rings, while Late
+              Blight causes water-soaked lesions. These visual differences allow
+              the CNN to learn class-specific features.
             </p>
-            <div class="chart-container">
-                <canvas id="diseaseImpactChart"></canvas>
-            </div>
-        </section>
-
-        <!-- Model Performance -->
-        <section class="viz-section">
-            <h3>📈 Model Performance Metrics</h3>
-            <p class="viz-description">
-                The model achieves high accuracy across all disease classes. Precision and recall metrics show
-                the model is reliable for practical use. The confusion matrix (available in training logs)
-                shows minimal misclassification between disease types.
+          </div>
+          <div class="insight-card">
+            <h4>3. Real-World Impact</h4>
+            <p>
+              Small-scale farmers in Africa can lose 30–50% of potato yield to
+              diseases. This system gives them a fast, low-cost "expert opinion"
+              by using just a smartphone picture of a leaf.
             </p>
-            <div class="chart-container">
-                <canvas id="performanceChart"></canvas>
-            </div>
-        </section>
-
-        <!-- Dataset Statistics -->
-        <section class="viz-section">
-            <h3>📋 Dataset Statistics</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Total Training Images</h4>
-                    <p id="totalImages" class="stat-value">2,152</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Early Blight Samples</h4>
-                    <p class="stat-value">1,000</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Late Blight Samples</h4>
-                    <p class="stat-value">1,000</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Healthy Samples</h4>
-                    <p class="stat-value">152</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Key Insights -->
-        <section class="viz-section">
-            <h3>💡 Key Insights</h3>
-            <div class="insights">
-                <div class="insight-card">
-                    <h4>1. Data Imbalance Challenge</h4>
-                    <p>
-                        The healthy class has significantly fewer samples (152) compared to diseased classes (1000 each).
-                        This reflects real-world scenarios where diseased samples are more readily available for research.
-                        We use data augmentation and class weights to handle this imbalance.
-                    </p>
-                </div>
-                <div class="insight-card">
-                    <h4>2. Disease Characteristics</h4>
-                    <p>
-                        Early Blight creates dark spots with concentric rings, while Late Blight causes water-soaked lesions.
-                        The visual differences help the CNN model distinguish between them effectively. Transfer learning
-                        from ImageNet further improves feature extraction.
-                    </p>
-                </div>
-                <div class="insight-card">
-                    <h4>3. Real-World Impact</h4>
-                    <p>
-                        In African agriculture, small-scale farmers lose 30-50% of crops to diseases annually.
-                        Early detection through this AI system can reduce losses significantly, improve food security,
-                        and provide accessible diagnostic tools where agricultural experts are scarce.
-                    </p>
-                </div>
-            </div>
-        </section>
+          </div>
+        </div>
+      </section>
     </div>
 
     <footer class="footer">
-        <p>&copy; 2024 Potato Disease Classifier | African Leadership University</p>
+      <p>
+        &copy; 2025 Potato Disease Classifier | Edine Noella Mugisha | African
+        Leadership University
+      </p>
     </footer>
 
-    <script src="/static/js/main.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
-        // Initialize charts when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeCharts();
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeCharts();
+      });
     </script>
-</body>
+  </body>
 </html>

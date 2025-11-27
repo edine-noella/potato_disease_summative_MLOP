@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Potato Disease Classifier</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <h1>Potato Disease Classifier</h1>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/dashboard" class="active">Dashboard</a></li>
+          <li><a href="/visualizations">Visualizations</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container main-content">
+      <h2>Model Monitoring & Retraining Dashboard</h2>
+
+      <!-- Uptime and system status -->
+      <section class="dashboard-section">
+        <h3>Model Uptime & System Status</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Model Uptime</h4>
+            <p id="uptime" class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Total Predictions</h4>
+            <p id="totalPredictions" class="stat-value">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>CPU Usage</h4>
+            <p id="cpuUsage" class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Memory Usage</h4>
+            <p id="memoryUsage" class="stat-value">–</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Prediction statistics -->
+      <section class="dashboard-section">
+        <h3>Prediction Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Avg Confidence</h4>
+            <p id="avgConfidence" class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Avg Inference Time</h4>
+            <p id="avgInferenceTime" class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Min Inference Time</h4>
+            <p id="minInferenceTime" class="stat-value">–</p>
+          </div>
+          <div class="stat-card">
+            <h4>Max Inference Time</h4>
+            <p id="maxInferenceTime" class="stat-value">–</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Training status -->
+      <section class="dashboard-section">
+        <h3>🛠 Training Status</h3>
+        <div class="training-status">
+          <p>
+            Status:
+            <strong id="trainingStatus" style="color: #27ae60;">Idle</strong>
+          </p>
+          <p>
+            Progress: <strong id="trainingProgress">0%</strong> –
+            <span id="trainingMessage">Waiting for retraining...</span>
+          </p>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Training controls -->
+      <section class="dashboard-section">
+        <h3>Upload New Data & Trigger Retraining</h3>
+        <div class="training-controls">
+          <!-- Upload data -->
+          <div class="control-group">
+            <h4>Upload Training Data</h4>
+            <p>Select new images to add to the training set.</p>
+            <label for="classLabel">Class Label:</label>
+            <select id="classLabel">
+              <option value="Potato___Early_blight">Early Blight</option>
+              <option value="Potato___Late_blight">Late Blight</option>
+              <option value="Potato___healthy">Healthy</option>
+            </select>
+
+            <input
+              type="file"
+              id="trainingDataInput"
+              accept="image/*"
+              multiple
+            />
+
+            <button onclick="uploadTrainingData()" class="btn-secondary">
+              Upload Data
+            </button>
+          </div>
+
+          <!-- Retraining -->
+          <div class="control-group">
+            <h4>Trigger Retraining</h4>
+            <p>
+              Start a new training run using the uploaded data. This calls your
+              backend retraining pipeline.
+            </p>
+
+            <label for="retrainEpochs">Epochs:</label>
+            <input
+              type="number"
+              id="retrainEpochs"
+              value="5"
+              min="1"
+              max="50"
+            />
+
+            <button onclick="startRetraining()" class="btn-warning">
+              Start Retraining
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>
+        &copy; 2025 Potato Disease Classifier | Edine Noella Mugisha | African
+        Leadership University
+      </p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // initial fetch
+        updateDashboard();
+        updateTrainingStatus();
+
+        // refresh periodically (e.g. every 5 seconds)
+        setInterval(updateDashboard, 5000);
+        setInterval(updateTrainingStatus, 5000);
+      });
+    </script>
+  </body>
+</html>
