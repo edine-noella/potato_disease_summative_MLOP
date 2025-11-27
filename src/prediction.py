@@ -3,6 +3,8 @@ Prediction Module for Potato Disease Classification
 Handles single and batch predictions
 """
 
+import os
+import glob
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -19,25 +21,91 @@ logger = logging.getLogger(__name__)
 class DiseasePredictor:
     """Handles predictions for potato disease classification"""
     
-    def __init__(self, model_path='models/potato_disease_model.h5',
-                 class_names_path='models/class_names.json'):
+    def __init__(
+        self,
+        models_root: str | None = None,
+        model_name: str = "potato_mobilenetv2",
+        img_size: tuple = (256, 256),
+    ):
         """
         Initialize predictor
         
         Args:
-            model_path: Path to trained model
-            class_names_path: Path to class names JSON
+        models_root: Optional path to models directory.
+                     If None, resolves to project/models/
+        model_name: Name prefix of model folder
+        img_size: Expected image input size
         """
-        self.model_path = model_path
-        self.class_names_path = class_names_path
+        if models_root is None:
+            # Directory of this file: project/src
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            # Move up to project root: project/
+            project_root = os.path.abspath(os.path.join(current_dir, ".."))
+
+            # Models directory: project/models
+            self.models_root = os.path.join(project_root, "models")
+        else:
+             self.models_root = models_root
+
+        self.model_name = model_name
+        self.img_size = img_size
+
+        self.model_dir = None
+        self.model_path = None
+        self.class_names_path = None
+
         self.model = None
         self.class_names = None
-        self.img_size = (256, 256)
         self.prediction_log = []
-        
+
+        self._resolve_latest_model_dir()
         self.load_model()
         self.load_class_names()
-    
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+    def _resolve_latest_model_dir(self):
+        """
+        Find the latest model directory under models_root matching
+        pattern: {model_name}_YYYYMMDD_HHMMSS
+        """
+        pattern = os.path.join(self.models_root, f"{self.model_name}_*")
+        candidate_dirs = [d for d in glob.glob(pattern) if os.path.isdir(d)]
+
+        if not candidate_dirs:
+            raise FileNotFoundError(
+                f"No model directory found matching pattern:\n  {pattern}\n"
+                "Make sure you have trained and saved a model using the notebook."
+            )
+
+        # Sort by modification time (or name, both work since timestamp is in name)
+        candidate_dirs.sort(key=os.path.getmtime, reverse=True)
+        self.model_dir = candidate_dirs[0]
+
+        self.model_path = os.path.join(self.model_dir, f"{self.model_name}.h5")
+        self.class_names_path = os.path.join(self.model_dir, "class_names.json")
+
+        logger.info(f"Using model directory: {self.model_dir}")
+        logger.info(f"Model path: {self.model_path}")
+        logger.info(f"Class names path: {self.class_names_path}")
+
+        if not os.path.exists(self.model_path):
+            raise FileNotFoundError(
+                f"Model file not found at:\n  {self.model_path}\n"
+                "Check that your training notebook saved the .h5 file correctly."
+            )
+
+        if not os.path.exists(self.class_names_path):
+            raise FileNotFoundError(
+                f"class_names.json not found at:\n  {self.class_names_path}\n"
+                "Check that your training notebook saved class_names.json correctly."
+            )
+
+    # ------------------------------------------------------------------
+    # Loading
+    # ------------------------------------------------------------------
     def load_model(self):
         """Load the trained model"""
         try:
@@ -56,7 +124,10 @@ class DiseasePredictor:
         except Exception as e:
             logger.error(f"Error loading class names: {e}")
             raise
-    
+
+    # ------------------------------------------------------------------
+    # Preprocessing & prediction
+    # ------------------------------------------------------------------
     def preprocess_image(self, image_path):
         """
         Preprocess image for prediction
@@ -126,7 +197,10 @@ class DiseasePredictor:
         # Log prediction
         self.prediction_log.append(result)
         
-        logger.info(f"Prediction: {predicted_class} ({confidence:.2%}) in {inference_time*1000:.2f}ms")
+        logger.info(
+            f"Prediction: {predicted_class} ({confidence:.2%}) "
+            f"in {inference_time*1000:.2f}ms"
+        )
         
         return result
     
@@ -171,7 +245,9 @@ class DiseasePredictor:
                     'image_path': batch_paths[j],
                     'predicted_class': predicted_class,
                     'confidence': confidence,
-                    'inference_time_ms': round((inference_time / len(batch_paths)) * 1000, 2)
+                    'inference_time_ms': round(
+                        (inference_time / len(batch_paths)) * 1000, 2
+                    )
                 }
                 
                 results.append(result)
@@ -180,6 +256,9 @@ class DiseasePredictor:
         
         return results
     
+    # ------------------------------------------------------------------
+    # Interpretation & stats
+    # ------------------------------------------------------------------
     def get_interpretation(self, predicted_class, confidence):
         """
         Get human-readable interpretation of prediction
@@ -215,7 +294,11 @@ class DiseasePredictor:
             'recommendation': 'Consult with an agricultural expert.'
         })
         
-        confidence_level = 'High' if confidence > 0.9 else 'Medium' if confidence > 0.7 else 'Low'
+        confidence_level = (
+            'High' if confidence > 0.9
+            else 'Medium' if confidence > 0.7
+            else 'Low'
+        )
         
         interpretation['confidence_level'] = confidence_level
         interpretation['confidence_score'] = confidence
@@ -232,12 +315,12 @@ class DiseasePredictor:
         
         stats = {
             'total_predictions': len(self.prediction_log),
-            'average_confidence': np.mean(confidences),
-            'min_confidence': np.min(confidences),
-            'max_confidence': np.max(confidences),
-            'average_inference_time_ms': np.mean(inference_times),
-            'min_inference_time_ms': np.min(inference_times),
-            'max_inference_time_ms': np.max(inference_times)
+            'average_confidence': float(np.mean(confidences)),
+            'min_confidence': float(np.min(confidences)),
+            'max_confidence': float(np.max(confidences)),
+            'average_inference_time_ms': float(np.mean(inference_times)),
+            'min_inference_time_ms': float(np.min(inference_times)),
+            'max_inference_time_ms': float(np.max(inference_times))
         }
         
         return stats
@@ -278,11 +361,10 @@ if __name__ == "__main__":
     try:
         predictor = DiseasePredictor()
         
-        # Test prediction (you'll need a sample image)
+        # Example:
         # result = predictor.predict_single('path/to/test/image.jpg')
         # print(json.dumps(result, indent=2))
         
-        # Get stats
         stats = predictor.get_prediction_stats()
         print("\nPrediction Statistics:")
         print(json.dumps(stats, indent=2))
