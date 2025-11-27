@@ -133,11 +133,11 @@ Key layers include:
 ## 4. Model Training  
 Training pipeline is implemented in `train.py`.
 
-✔ Early stopping  
-✔ Learning rate scheduling  
-✔ Checkpoint saving (`.h5`)  
-✔ Tensorboard logging  
-✔ Training history JSON export  
+- Early stopping  
+- Learning rate scheduling  
+- Checkpoint saving (`.h5`)  
+- Tensorboard logging  
+- Training history JSON export  
 
 Metrics Tracked:
 - Accuracy  
@@ -180,10 +180,10 @@ All evaluation steps are shown in the Jupyter Notebook.
 ## 7. Retraining Pipeline  
 Users can:
 
-✔ Upload new images (bulk)  
-✔ Assign them to a class  
-✔ Trigger retraining (`POST /api/train/retrain`)  
-✔ Monitor progress on the dashboard  
+- Upload new images (bulk)  
+- Assign them to a class  
+- Trigger retraining (`POST /api/train/retrain`)  
+- Monitor progress on the dashboard  
 
 Retraining happens on a background thread.
 
