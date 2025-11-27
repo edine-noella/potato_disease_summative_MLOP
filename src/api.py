@@ -37,8 +37,8 @@ except ImportError:
 
 # Initialize Flask app
 app = Flask(__name__, 
-           template_folder='templates',
-           static_folder='static')
+           template_folder='../templates',
+           static_folder='../static')
 CORS(app)
 
 # Configuration
