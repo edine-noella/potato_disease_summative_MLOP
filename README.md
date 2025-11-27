@@ -30,7 +30,7 @@ This project satisfies **all requirements** in the ALU Machine Learning Pipeline
 ---
 
 ## Video Demonstration  
-**YouTube Demo:** *Add your YouTube link here*  
+**YouTube Demo:** [*https://youtu.be/_GnIBwHbyLM*  ](https://youtu.be/_GnIBwHbyLM)
 
 The video demonstrates:  
 - UI walkthrough  
