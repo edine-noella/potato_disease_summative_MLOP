@@ -17,6 +17,11 @@ import psutil
 import sys
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # /opt/render/project/src/src
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))  # /opt/render/project/src
+LOGS_DIR = os.path.join(PROJECT_ROOT, "logs")
+os.makedirs(LOGS_DIR, exist_ok=True)
+
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -47,7 +52,11 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # Logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(os.path.join(LOGS_DIR, "training.log")),
+        logging.StreamHandler(),
+    ],
 )
 logger = logging.getLogger(__name__)
 
