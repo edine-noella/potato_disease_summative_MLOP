@@ -45,6 +45,7 @@ The video demonstrates:
 
 # Project Structure
 
+```bash
 potato_disease_summative_MLOP/
 │
 ├── README.md
@@ -88,7 +89,7 @@ potato_disease_summative_MLOP/
 │ └── locustfile.py
 │
 └── requirements.txt
-
+```
 ---
 
 # Machine Learning Pipeline Summary
@@ -215,7 +216,7 @@ UI features:
 
 ---
 
-# 🏃‍♂️ How to Run Locally
+# How to Run Locally
 
 ## 1. Clone the repo
 
